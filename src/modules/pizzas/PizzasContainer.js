@@ -23,12 +23,15 @@ type PizzasContainerProps = {
   fetching: boolean,
   pizzas: Array<Pizza>,
   toppings: Array<Topping>,
+  location: any,
   actions: {
     fetchPizzas: () => void,
     fetchToppings: () => void,
     removePizza: (id: number) => void,
     fetchPizzaToppings: (id: number) => void,
     createPizza: (name: string, description: string) => void,
+    addToppingToPizza: (pizzaId: number, toppingId: number) => void,
+    removeToppingFromPizza: (pizzaId: number, toppingId: number) => void,
   }
 };
 type PizzasContainerState = { showForm: boolean };

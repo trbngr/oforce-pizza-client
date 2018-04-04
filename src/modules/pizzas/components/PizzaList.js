@@ -40,13 +40,13 @@ class PizzaList extends React.Component<PizzaListProps, PizzaListState> {
     showEditor: false
   };
 
-  openPizza = id => this.setState({ activeId: id }, () =>
+  openPizza = (id: number) => this.setState({ activeId: id }, () =>
     this.props.onPizzaClick(id)
   );
 
   closePizza = () => this.setState({ activeId: undefined });
 
-  showToppings = (pizza) => () => {
+  showToppings = (pizza: Pizza) => () => {
     this.setState({ showEditor: false }, () => {
       const { activeId } = this.state;
       return activeId === pizza.id
@@ -55,21 +55,19 @@ class PizzaList extends React.Component<PizzaListProps, PizzaListState> {
     });
   };
 
-  removePizza = pizza => (e) => {
-    e.stopPropagation();
+  removePizza = (pizza: Pizza) => () =>
     this.props.onRemove(pizza.id);
-  };
 
   openEditor = (activeId: number) => () => {
     this.setState(
-      {activeId, showEditor: true},
+      { activeId, showEditor: true },
       () => this.props.onPizzaClick(activeId)
     );
   };
 
-  closeEditor = () => this.setState({showEditor: false});
+  closeEditor = () => this.setState({ showEditor: false });
 
-  renderToppings(id) {
+  renderToppings(id: number) {
     const { pizzas, loading } = this.props;
     const pizza = pizzas.find(x => x.id === id);
     return pizza ? (
@@ -89,9 +87,10 @@ class PizzaList extends React.Component<PizzaListProps, PizzaListState> {
       <Modal
         backdrop="static"
         isOpen={true}
-        toggle={this.toggleForm}
+        toggle={this.closeEditor}
       >
-        <ModalHeader toggle={this.toggleForm}>{pizza.name} Toppings</ModalHeader>
+        <ModalHeader
+          toggle={this.closeEditor}>{pizza.name} Toppings</ModalHeader>
         <ModalBody>
           <ToppingsForm
             toppings={toppings}
