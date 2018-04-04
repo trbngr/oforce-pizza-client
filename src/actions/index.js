@@ -24,21 +24,17 @@ export const fetchPizzaToppings = (id: number) => async (dispatch, getState, { s
 
 export const createPizza = (name, description) =>
   async (dispatch, getState, { schema }) => {
-    await http.post(`pizzas`, { name, description }, response => {
-      return ({
-        type: types.PIZZA_CREATED,
-        payload: normalize(response, schema.pizza)
-      });
-    })(dispatch);
+    await http.post(`pizzas`, { name, description }, response => [
+      { type: types.PIZZA_CREATED, payload: normalize(response, schema.pizza) },
+      sendNotification(`Pizza ${name} was created with id ${response.id}`)
+    ])(dispatch);
   };
 
 export const removePizza = id => async (dispatch) => {
-  await http.delete(`pizzas/${id}`, () => {
-    return ({
-      type: types.PIZZA_REMOVED,
-      payload: { id }
-    });
-  })(dispatch, {expectEmptyResponse:true});
+  await http.delete(`pizzas/${id}`, () => [
+    { type: types.PIZZA_REMOVED, payload: { id } },
+    sendNotification(`Pizza was removed`)
+  ])(dispatch, { expectEmptyResponse: true });
 };
 
 export const addToppingToPizza = (pizzaId: number, toppingId: number) =>
@@ -48,7 +44,7 @@ export const addToppingToPizza = (pizzaId: number, toppingId: number) =>
         type: types.TOPPING_ADDED_TO_PIZZA,
         payload: { pizzaId, toppingId }
       });
-    })(dispatch, {expectEmptyResponse:true});
+    })(dispatch, { expectEmptyResponse: true });
   };
 
 export const removeToppingFromPizza = (pizzaId: number, toppingId: number) =>
@@ -56,7 +52,7 @@ export const removeToppingFromPizza = (pizzaId: number, toppingId: number) =>
     await http.delete(`pizzas/${pizzaId}/toppings/${toppingId}`, () => ({
       type: types.TOPPING_REMOVED_FROM_PIZZA,
       payload: { pizzaId, toppingId }
-    }))(dispatch, {expectEmptyResponse:true});
+    }))(dispatch, { expectEmptyResponse: true });
   };
 
 export const fetchToppings = () => async (dispatch, getState, { schema }) => {
@@ -80,8 +76,8 @@ export const createTopping = (name: string) =>
 export const deleteTopping = (id: number) =>
   async (dispatch) => {
     const options = {
-      expectEmptyResponse:true,
-      handleError: () => raiseError("Topping belongs to at least one pizza.")
+      expectEmptyResponse: true,
+      handleError: () => raiseError('Topping belongs to at least one pizza.')
     };
     return await http.delete(`toppings/${id}`, () => [
       { type: types.TOPPING_REMOVED, payload: { id } },

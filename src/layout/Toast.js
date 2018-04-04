@@ -8,14 +8,11 @@ import * as selectors from '../store/selectors';
 import { withRouter } from 'react-router-dom';
 
 class Toast extends React.Component {
-  dismiss = id => () => {
-    console.log(this.props.actions);
-    return this.props.actions.dismissNotification(id);
-  };
+  dismiss = id => () =>
+    this.props.actions.dismissNotification(id);
 
   render() {
     const {notifications: {error, success}} = this.props;
-    console.log({error, success});
 
     return (
       <div aria-live="polite" role="alert" id="toast-container" className="toast-bottom-right">

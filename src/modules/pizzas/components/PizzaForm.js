@@ -29,18 +29,20 @@ class PizzaForm extends React.Component<PizzaFormProps, PizzaFormState> {
 
   setValue = name => ({ currentTarget: { value } }) => this.setState({ [name]: value });
 
-  isValid = () => this.state.name.length > 2;
+  isNameValid = () => this.state.name.length > 0;
+  isDescriptionValid = () => this.state.description.length > 0;
 
   savePizza = (e) => {
     e.stopPropagation();
-    const {name, description} = this.state;
+    const { name, description } = this.state;
     this.props.onSave(name, description);
   };
 
   render() {
-    const { name, description} = this.state;
+    const { name, description } = this.state;
     const { onCancel } = this.props;
-    const valid = this.isValid();
+    const nameValid = this.isNameValid();
+    const descriptionValid = this.isDescriptionValid();
     return (
       <Form>
         <FormGroup>
@@ -49,14 +51,12 @@ class PizzaForm extends React.Component<PizzaFormProps, PizzaFormState> {
             id="name"
             type="text"
             value={name}
-            valid={valid}
-            invalid={!valid}
+            valid={nameValid}
+            invalid={!nameValid}
             onChange={this.setValue('name')}
           />
-          {!this.isValid() && (
-            <FormFeedback>
-              Whoops. This name is too short.
-            </FormFeedback>
+          {!nameValid && (
+            <FormFeedback> Name is required </FormFeedback>
           )}
         </FormGroup>
         <FormGroup>
@@ -65,8 +65,13 @@ class PizzaForm extends React.Component<PizzaFormProps, PizzaFormState> {
             id="description"
             type="text"
             value={description}
+            valid={descriptionValid}
+            invalid={!descriptionValid}
             onChange={this.setValue('description')}
           />
+          {!descriptionValid && (
+            <FormFeedback> Description is required. </FormFeedback>
+          )}
         </FormGroup>
         <hr/>
         <FormGroup row>

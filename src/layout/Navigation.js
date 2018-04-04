@@ -17,7 +17,7 @@ class Navigation extends React.Component {
   render() {
     return (
       <Navbar color="inverse" light expand="md">
-        <NavbarBrand tag={Link} to="/">Pizzah</NavbarBrand>
+        <NavbarBrand tag={Link} to="/">Pizzahhhh</NavbarBrand>
         <NavbarToggler onClick={this.toggle}/>
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>

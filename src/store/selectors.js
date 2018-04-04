@@ -28,10 +28,7 @@ export const pizzas = createSelector(
 const allNotifications = createSelector(
   state => state.db.currentNotifications,
   state => state.db.entities.notification,
-  (ids, notifications) => {
-    console.log({ids, notifications});
-    return ids.map(id => ({id, ...notifications[id]}))
-  }
+  (ids, notifications) => ids.map(id => ({ id, ...notifications[id] }))
 );
 
 const errorNotifications = createSelector(
