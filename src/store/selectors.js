@@ -46,3 +46,7 @@ export const notifications = createSelector(
   (error, success) => ({error, success})
 );
 
+export const searchFilter = createSelector(
+  state => state.db,
+  db => db.searchFilter
+);

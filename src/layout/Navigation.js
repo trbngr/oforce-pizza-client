@@ -9,6 +9,12 @@ import {
   NavLink
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import Search from '../components/Search';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { searchForPizza } from '../actions';
+import * as selectors from '../store/selectors'
+
 
 class Navigation extends React.Component {
   state = { isOpen: false };
@@ -21,6 +27,10 @@ class Navigation extends React.Component {
         <NavbarToggler onClick={this.toggle}/>
         <Collapse isOpen={this.state.isOpen} navbar>
           <Nav className="ml-auto" navbar>
+            <Search
+              searchFilter={this.props.searchFilter}
+              onSearch={this.props.actions.searchForPizza}
+            />
             <NavItem>
               <NavLink tag={Link} to="/pizzas">Pizzas</NavLink>
             </NavItem>
@@ -41,4 +51,11 @@ class Navigation extends React.Component {
 
 Navigation.propTypes = {};
 
-export default Navigation;
+export default connect(
+  state => ({
+    searchFilter: selectors.searchFilter(state)
+  }),
+  dispatch => ({
+    actions: bindActionCreators({searchForPizza}, dispatch)
+  })
+)(Navigation);

@@ -3,6 +3,7 @@ import { normalize } from 'normalizr';
 import * as schema from './schema';
 
 const initialState = {
+  searchFilter: undefined,
   entities: {
     pizza: {},
     topping: {},
@@ -22,7 +23,14 @@ export default (state = initialState, action = {}) => {
           ...state.entities,
           ...action.payload.entities
         },
+        searchFilter: action.payload.searchFilter,
         currentPizzas: action.payload.result
+      };
+
+    case types.SEARCH_FILTER_CLEARED:
+      return {
+        ...state,
+        searchFilter: undefined,
       };
 
     case types.TOPPINGS_RETRIEVED:

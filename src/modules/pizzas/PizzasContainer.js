@@ -15,7 +15,8 @@ import {
   createPizza,
   fetchToppings,
   addToppingToPizza,
-  removeToppingFromPizza
+  removeToppingFromPizza,
+  clearSearchFilter
 } from '../../actions/index';
 import PizzaForm from './components/PizzaForm';
 
@@ -32,6 +33,7 @@ type PizzasContainerProps = {
     createPizza: (name: string, description: string) => void,
     addToppingToPizza: (pizzaId: number, toppingId: number) => void,
     removeToppingFromPizza: (pizzaId: number, toppingId: number) => void,
+    clearSearchFilter: () => void,
   }
 };
 type PizzasContainerState = { showForm: boolean };
@@ -48,6 +50,14 @@ class PizzasContainer extends React.Component<PizzasContainerProps, PizzasContai
     this.setState({ showForm: Boolean((state || {}).create) });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.searchFilter !== this.props.searchFilter && !nextProps.searchFilter){
+      const { actions } = this.props;
+      actions.fetchPizzas();
+    }
+  }
+
+
   toggleForm = () => this.setState(st => ({ showForm: !st.showForm }));
 
   createPizza = (name: string, description: string) => this.setState(
@@ -56,7 +66,9 @@ class PizzasContainer extends React.Component<PizzasContainerProps, PizzasContai
   );
 
   render() {
-    const { fetching, pizzas, actions, toppings } = this.props;
+    const { fetching, pizzas, actions, toppings, searchFilter } = this.props;
+
+    console.log(this.props)
 
     return (
       <div>
@@ -69,9 +81,16 @@ class PizzasContainer extends React.Component<PizzasContainerProps, PizzasContai
         </Row>
         <Row>
           <Col>
-            <h1> Pizzas</h1>
+            <h1>Pizzas</h1>
           </Col>
         </Row>
+        {
+          searchFilter && (
+            <Row>
+              <Col><Button onClick={actions.clearSearchFilter}>Clear Filter</Button></Col>
+            </Row>
+          )
+        }
         <Row>
           <Col>
             <PizzaList
@@ -107,6 +126,7 @@ class PizzasContainer extends React.Component<PizzasContainerProps, PizzasContai
 
 export default connect(
   state => ({
+    searchFilter: selectors.searchFilter(state),
     fetching: selectors.isFetchingData(state),
     pizzas: selectors.pizzas(state),
     toppings: selectors.toppings(state)
@@ -120,6 +140,7 @@ export default connect(
       addToppingToPizza,
       fetchPizzaToppings,
       removeToppingFromPizza,
+      clearSearchFilter
     }, dispatch)
   })
 )(PizzasContainer);

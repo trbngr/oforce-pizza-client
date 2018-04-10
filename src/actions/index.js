@@ -106,3 +106,18 @@ export const dismissNotification = id => ({
   type: types.NOTIFICATION_DISMISSED,
   payload: { id }
 });
+
+export const clearSearchFilter = () => ({type: types.SEARCH_FILTER_CLEARED});
+
+export const searchForPizza = query => async (dispatch, getState, { schema }) => {
+  await http.get('pizzas', data => {
+    const results = data.filter(pizza => pizza.name.toLocaleLowerCase() === query.toLocaleLowerCase());
+    return {
+      type: types.PIZZAS_RETRIEVED,
+      payload: {
+        searchFilter: query,
+        ...normalize(results, [schema.pizza])
+      }
+    };
+  })(dispatch);
+};
